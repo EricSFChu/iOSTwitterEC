@@ -8,6 +8,9 @@
 
 import UIKit
 
+var _currentUser: User?
+let currentUserKey = "kCurrentUserKey"
+
 class User: NSObject {
     var name: String?
     var screenname: String?
@@ -17,9 +20,51 @@ class User: NSObject {
     
     init(dictionary: NSDictionary) {
         self.dictionary = dictionary
+        
         name = dictionary["name"] as? String
         screenname = dictionary["screen_name"] as? String
         profileImageUrl = dictionary["profile_image_url"] as? String
         tagline = dictionary["description"] as? String
     }
+    
+    class var currentUSer: User? {
+        get{
+            if _currentUser == nil {
+                let data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as! NSData?
+                if data != nil {
+                    if data != nil {
+                        do {
+                            let dictionary =  try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+                            _currentUser = User(dictionary: dictionary)
+                            } catch(let error) {
+                                print(error)
+                                assert(false)
+                            }
+                    }
+                }
+            }
+                return _currentUser
+        }
+        
+        set(user) {
+            _currentUser = user
+        
+            if _currentUser != nil {
+                do {
+                    if let data = try NSJSONSerialization.dataWithJSONObject((user?.dictionary)!, options: [])  as NSData!{
+                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey) }
+                    } catch let error as NSError {
+                    print(error.localizedDescription)
+                    }
+                
+            } else {
+                    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
+                    }
+            
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        
+    }
 }
+
+
