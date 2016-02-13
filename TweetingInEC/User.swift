@@ -27,7 +27,7 @@ class User: NSObject {
         tagline = dictionary["description"] as? String
     }
     
-    class var currentUSer: User? {
+    class var currentUser: User? {
         get{
             if _currentUser == nil {
                 let data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as! NSData?
@@ -51,12 +51,12 @@ class User: NSObject {
         
             if _currentUser != nil {
                 do {
-                    if let data = try NSJSONSerialization.dataWithJSONObject((user?.dictionary)!, options: [])  as NSData!{
-                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey) }
-                    } catch let error as NSError {
-                    print(error.localizedDescription)
+                    let data = try NSJSONSerialization.dataWithJSONObject(user!.dictionary, options: NSJSONWritingOptions.PrettyPrinted)
+                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
+                    } catch (let error) {
+                    print(error)
+                        assert(false)
                     }
-                
             } else {
                     NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
                     }
