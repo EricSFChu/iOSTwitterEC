@@ -11,19 +11,29 @@ import UIKit
 class Tweet: NSObject {
     var user: User?
     var text: String?
-    var createdAtString: String?
+    var createdAtString: String!
     var createdAt: NSDate?
     var username: String?
     var insideUser: NSDictionary?
+    var name: String?
+    var profileURLString: String?
+    var profileURL: NSURL
+    var favoriteCount: IntegerLiteralType
+    var id: Int
     
     init(dictionary: NSDictionary) {
         user = User(dictionary: (dictionary["user"] as? NSDictionary)!)
         text = dictionary["text"] as? String
-        createdAtString = dictionary["created_at"] as? String
+        createdAtString = dictionary["created_at"] as! String
         insideUser = dictionary["user"] as? NSDictionary
         username = insideUser!["screen_name"] as? String
-        print("####### ", dictionary)
-        print(username)
+        username = "@" + username!
+        name = insideUser!["name"] as? String
+        profileURLString = insideUser!["profile_image_url"] as? String
+        profileURL = NSURL(string: profileURLString!)!
+        favoriteCount = dictionary["favorite_count"] as! IntegerLiteralType
+        id = dictionary["id"] as! Int
+        print(id)
         
         let formatter = NSDateFormatter()
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
