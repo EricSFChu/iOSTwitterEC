@@ -12,15 +12,25 @@ import BDBOAuth1Manager
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidLogout", name: userDidLogoutNotification, object: nil)
         if User.currentUser != nil {
             // go to the logged in screen
             print("Current user detected", User.currentUser?.name)
+            let vc =
+            storyboard.instantiateViewControllerWithIdentifier("Tweets View Controller") as UIViewController
+            window?.rootViewController = vc
         }
         return true
+    }
+    
+    //reset the view when user logs out
+    func userDidLogout() {
+        let vc = storyboard.instantiateInitialViewController()! as UIViewController
+        window?.rootViewController = vc
     }
 
     func applicationWillResignActive(application: UIApplication) {
