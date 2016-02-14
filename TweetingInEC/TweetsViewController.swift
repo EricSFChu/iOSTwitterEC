@@ -40,9 +40,18 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let indexPath = tableView.indexPathForCell(cell)
         let tweet = tweets![indexPath!.row]
         let path = tweet.id
-        TwitterClient.sharedInstance.retweet(path, params: nil) { (error) -> () in
-            print("Retweeting")
+        let toTweetOrNotToTweet = tweet.retweeted
+        if toTweetOrNotToTweet == 0 {
+            TwitterClient.sharedInstance.retweet(path, params: nil) { (error) -> () in
+                print("Retweeting")
+            }
+        } else if toTweetOrNotToTweet == 1 {
+            TwitterClient.sharedInstance.unretweet(path, params: nil , completion: { (error) -> () in
+                print("Unretweeting")
+            })
         }
+        
+
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
             self.tweets = tweets
             self.tableView.reloadData()
@@ -74,7 +83,8 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.message.text = tweet.text
         cell.timeLabel.text = tweet.createdAtString
         cell.profileImage.setImageWithURL(tweet.profileURL)
-        cell.retweetLabel.text = "\(tweet.favoriteCount)"
+        cell.retweetLabel.text = "\(tweet.retweetCount)"
+        cell.favoriteLabel.text = "\(tweet.favoriteCount)"
         
         return cell
         

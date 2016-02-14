@@ -35,7 +35,7 @@ class TwitterClient: BDBOAuth1SessionManager {
        // print("text: \(tweet.text), created: \(tweet.createdAt)")
         }
     }, failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
-        print("error getting home timeline")
+        print("error getting home timeline", error)
         completion(tweets: nil, error: error)
     })
         
@@ -89,7 +89,18 @@ class TwitterClient: BDBOAuth1SessionManager {
             print("Retweeted tweet with id: \(id)")
             completion(error: nil)
             }, failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
-                print("Couldn't retweet")
+                print("cant retweet")
+                completion(error: error)
+            }
+        )
+    }
+    
+    func unretweet(id: Int, params: NSDictionary?, completion: (error: NSError?) -> () ){
+        POST("1.1/statuses/unretweet/\(id).json", parameters: params, success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
+            print("unretweeted tweet with id: \(id)")
+            completion(error: nil)
+            }, failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
+                print("cant unretweet")
                 completion(error: error)
             }
         )

@@ -16,5 +16,7 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var profileImage: UIImageView!
     @IBOutlet weak var retweet: UIButton!
     @IBOutlet weak var retweetLabel: UILabel!
+    @IBOutlet weak var favoriteLabel: UILabel!
+    @IBOutlet weak var favoriteButton: UIButton!
     
 }
