@@ -32,7 +32,7 @@ class TwitterClient: BDBOAuth1SessionManager {
             completion(tweets: tweets, error: nil)
             
         for tweet in tweets {
-        print("text: \(tweet.text), created: \(tweet.createdAt)")
+       // print("text: \(tweet.text), created: \(tweet.createdAt)")
         }
     }, failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
         print("error getting home timeline")
