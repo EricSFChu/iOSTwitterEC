@@ -19,7 +19,10 @@ class Tweet: NSObject {
     var profileURLString: String?
     var profileURL: NSURL
     var favoriteCount: IntegerLiteralType
+    var retweetCount: Int
     var id: Int
+    var retweeted: Int
+    var favorited: Int
     
     init(dictionary: NSDictionary) {
         user = User(dictionary: (dictionary["user"] as? NSDictionary)!)
@@ -33,7 +36,11 @@ class Tweet: NSObject {
         profileURL = NSURL(string: profileURLString!)!
         favoriteCount = dictionary["favorite_count"] as! IntegerLiteralType
         id = dictionary["id"] as! Int
-        print(id)
+        retweetCount = dictionary["retweet_count"] as! Int
+        retweeted = dictionary["retweeted"] as! Int
+        favorited = dictionary["favorited"] as! Int
+        
+        //print(retweeted)
         
         let formatter = NSDateFormatter()
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
