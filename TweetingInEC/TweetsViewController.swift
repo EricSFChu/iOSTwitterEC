@@ -32,6 +32,33 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
     }
     
+
+
+    @IBAction func onFavorite(sender: AnyObject) {
+        
+        let button = sender as! UIButton
+        let view = button.superview!
+        let cell = view.superview as! TweetCell
+        
+        let indexPath = tableView.indexPathForCell(cell)
+        let tweet = tweets![indexPath!.row]
+        let path = tweet.id
+        let toFavoriteOrNotToFavorite = tweet.favorited
+        if toFavoriteOrNotToFavorite == 0 {
+            TwitterClient.sharedInstance.likeTweet(path, params: nil) { (error) -> () in
+                print("Liking")
+            }
+        } else if toFavoriteOrNotToFavorite == 1 {
+            TwitterClient.sharedInstance.unlikeTweet(path, params: nil , completion: { (error) -> () in
+                print("unliking")
+            })
+        }
+        TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
+            self.tweets = tweets
+            self.tableView.reloadData()
+        })
+    }
+    
     @IBAction func onRetweet(sender: AnyObject) {
         let button = sender as! UIButton
         let view = button.superview!
@@ -85,6 +112,28 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.profileImage.setImageWithURL(tweet.profileURL)
         cell.retweetLabel.text = "\(tweet.retweetCount)"
         cell.favoriteLabel.text = "\(tweet.favoriteCount)"
+        
+        let favoritableImage = UIImage(named: "favoritable") as UIImage?
+        let unfavoritableImage = UIImage(named: "unfavoritable") as UIImage?
+        let likableImage = UIImage(named: "likable") as UIImage?
+        let unlikableImage = UIImage(named: "unlikable") as UIImage?
+        
+        if tweet.favorited == 0 {
+            cell.favoriteButton.setImage(favoritableImage, forState: .Normal)
+        } else if tweet.favorited == 1 {
+            cell.favoriteButton.setImage(unfavoritableImage, forState: .Normal)
+        }
+        
+        if tweet.retweeted == 0 {
+            cell.retweet.setImage(likableImage, forState: .Normal)
+        } else if tweet.retweeted == 1 {
+            cell.retweet.setImage(unlikableImage, forState: .Normal)
+        }
+        
+        if tweet.mediaURL != nil {
+            cell.photoView.setImageWithURL(tweet.mediaURL!)
+            cell.photoView.sizeToFit()
+        }
         
         return cell
         
