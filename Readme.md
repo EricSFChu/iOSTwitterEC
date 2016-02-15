@@ -2,7 +2,7 @@
 
 **Tweeting in EC** is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: **3** hours spent in total
+Time spent: **20** hours spent in total
 
 ## User Stories
 
@@ -12,33 +12,33 @@ The following **required** functionality is completed:
 - [x] User can view last 20 tweets from their home timeline
 - [x] The current signed in user will be persisted across restarts
 - [x] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.
-- [ ] Retweeting and favoriting should increment the retweet and favorite count.
+- [x] Retweeting and favoriting should increment the retweet and favorite count.
 
 The following **optional** features are implemented:
 
 - [ ] User can load more tweets once they reach the bottom of the feed using infinite loading similar to the actual Twitter client.
-- [ ] User should be able to unretweet and unfavorite and should decrement the retweet and favorite count.
+- [x] User should be able to unretweet and unfavorite and should decrement the retweet and favorite count.
 - [x] User can pull to refresh.
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] Tweets now include images in the cells if available
+- [x] Splash Screen
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1. 
-2. 
+1. Understanding the tools for using APIs
 
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
 
-
+![WalkThrough](TweetingECWT.gif)
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Understanding how to speak to the twitter server has been a challenge. Accessing all parts of a JSON response is still somewhat difficult but i believe I am starting to grasp it.
 
 ## License
 

@@ -23,6 +23,10 @@ class Tweet: NSObject {
     var id: Int
     var retweeted: Int
     var favorited: Int
+    var entities: NSDictionary?
+    var media: [NSDictionary]?
+    var mediaURLString: String
+    var mediaURL: NSURL?
     
     init(dictionary: NSDictionary) {
         user = User(dictionary: (dictionary["user"] as? NSDictionary)!)
@@ -39,8 +43,26 @@ class Tweet: NSObject {
         retweetCount = dictionary["retweet_count"] as! Int
         retweeted = dictionary["retweeted"] as! Int
         favorited = dictionary["favorited"] as! Int
+        mediaURLString = ""
+        var key: NSDictionary?
+        //extract media info
+        entities = dictionary["entities"] as? NSDictionary
+        media = entities!["media"] as? [NSDictionary]
+        if media?.count > 0 {
+            for key in media! {
+            mediaURLString = (key["media_url"] as? String)!
+            mediaURL = NSURL(string: mediaURLString)
+            }
+        } else {
+            mediaURLString = ""
+            mediaURL = nil
+        }
         
-        //print(retweeted)
+        
+        //print(dictionary)
+        //print(entities)
+        //print(media)
+        //print("URL GOT IT: ", mediaURL)
         
         let formatter = NSDateFormatter()
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
