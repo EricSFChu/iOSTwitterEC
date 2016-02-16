@@ -20,4 +20,9 @@ class TweetCell: UITableViewCell {
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var photoView: UIImageView!
     
+    override func awakeFromNib() {
+        photoView.layer.cornerRadius = 4
+        photoView.clipsToBounds = true
+    }
+    
 }

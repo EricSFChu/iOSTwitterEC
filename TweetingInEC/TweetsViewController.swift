@@ -47,16 +47,29 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         if toFavoriteOrNotToFavorite == 0 {
             TwitterClient.sharedInstance.likeTweet(path, params: nil) { (error) -> () in
                 print("Liking")
+                self.tweets![indexPath!.row].favoriteCount += 1
+                tweet.favorited = 1
+                self.tableView.reloadData()
             }
         } else if toFavoriteOrNotToFavorite == 1 {
             TwitterClient.sharedInstance.unlikeTweet(path, params: nil , completion: { (error) -> () in
                 print("unliking")
+                self.tweets![indexPath!.row].favoriteCount -= 1
+                tweet.favorited = 0
+                self.tableView.reloadData()
             })
         }
+        /*
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
             self.tweets = tweets
-            self.tableView.reloadData()
+            //self.tableView.reloadData()
+            let index = NSIndexPath(forRow: indexPath!.row, inSection: 0)
+            self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
         })
+*/
+        let index = NSIndexPath(forRow: indexPath!.row, inSection: 0)
+        self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+        self.tableView.reloadData()
     }
     
     @IBAction func onRetweet(sender: AnyObject) {
@@ -71,18 +84,32 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         if toTweetOrNotToTweet == 0 {
             TwitterClient.sharedInstance.retweet(path, params: nil) { (error) -> () in
                 print("Retweeting")
+                self.tweets![indexPath!.row].retweetCount += 1
+                tweet.retweeted = 1
+                self.tableView.reloadData()
             }
         } else if toTweetOrNotToTweet == 1 {
             TwitterClient.sharedInstance.unretweet(path, params: nil , completion: { (error) -> () in
                 print("Unretweeting")
+                self.tweets![indexPath!.row].retweetCount -= 1
+                tweet.retweeted = 0
+                self.tableView.reloadData()
             })
         }
-        
 
+        /*
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
             self.tweets = tweets
-            self.tableView.reloadData()
+            let index = NSIndexPath(forRow: indexPath!.row, inSection: 0)
+            self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+            //self.tableView.reloadData()
         })
+        */
+        if tweets!.count != 0 {
+            let index = NSIndexPath(forRow: indexPath!.row, inSection: 0)
+            self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+        }
+        self.tableView.reloadData()
     }
     
 
@@ -112,11 +139,13 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.profileImage.setImageWithURL(tweet.profileURL)
         cell.retweetLabel.text = "\(tweet.retweetCount)"
         cell.favoriteLabel.text = "\(tweet.favoriteCount)"
-        
+        cell.photoView.image = nil
         let favoritableImage = UIImage(named: "favoritable") as UIImage?
         let unfavoritableImage = UIImage(named: "unfavoritable") as UIImage?
         let likableImage = UIImage(named: "likable") as UIImage?
         let unlikableImage = UIImage(named: "unlikable") as UIImage?
+        cell.profileImage.layer.cornerRadius = 4
+        cell.profileImage.clipsToBounds = true
         
         if tweet.favorited == 0 {
             cell.favoriteButton.setImage(favoritableImage, forState: .Normal)
@@ -131,9 +160,34 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         if tweet.mediaURL != nil {
-            cell.photoView.setImageWithURL(tweet.mediaURL!)
+            let imageRequest = NSURLRequest(URL: tweet.mediaURL!)
+            cell.photoView.setImageWithURLRequest(
+                imageRequest,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        cell.photoView.alpha = 0.0
+                        cell.photoView.image = image
+                        UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            cell.photoView.alpha = 1.0
+                        })
+                    } else {
+                        cell.photoView.image = image
+                    }
+                },
+                failure: { (imageRequest, imageResponse, error) -> Void in
+                    // do something for the failure condition
+            })
             cell.photoView.sizeToFit()
+            cell.photoView.layer.cornerRadius = 4
+            cell.photoView.clipsToBounds = true
+            cell.setNeedsLayout()
         }
+            //cell.photoView.setImageWithURL(tweet.mediaURL!)
+        
+        
         
         return cell
         
@@ -154,5 +208,17 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
 
     @IBAction func onLogout(sender: AnyObject) {
         User.currentUser?.logout()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "To Details Page" {
+            print("Details Segue called")
+            let cell = sender as! UITableViewCell
+            let indexPath = tableView.indexPathForCell(cell)
+            let tweet = tweets![indexPath!.row]
+            
+            let detailViewController = segue.destinationViewController as! DetailsViewController
+            detailViewController.tweet = tweet
+        }
     }
 }
