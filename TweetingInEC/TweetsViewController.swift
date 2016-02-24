@@ -134,10 +134,13 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         cell.userName.text = tweet.name
         cell.screenNameLabel.text = tweet.username
         //print("Tweet user name", tweet.username)
-        cell.message.text = tweet.text
+        cell.messageSpecial.text = tweet.text
+        cell.messageSpecial.sizeThatFits(CGSize(width: cell.messageSpecial.frame.width, height: CGFloat.max))
+        cell.messageSpecial.scrollEnabled = false
         cell.timeLabel.text = tweet.createdAtString
         cell.profileImage.setImageWithURL(tweet.profileURL)
         cell.retweetLabel.text = "\(tweet.retweetCount)"
+        cell.retweetLabel.sizeToFit()
         cell.favoriteLabel.text = "\(tweet.favoriteCount)"
         cell.photoView.image = nil
         let favoritableImage = UIImage(named: "favoritable") as UIImage?
