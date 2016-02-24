@@ -12,10 +12,12 @@ class DetailsViewController: UIViewController {
     var tweetMessage: String = ""
     var tweet: Tweet?
     
+
+    @IBOutlet weak var specialTextField: UITextView!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var profileView: UIImageView!
-    @IBOutlet weak var tweetLabel: UILabel!
+
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var favoriteLabel: UILabel!
@@ -35,7 +37,10 @@ class DetailsViewController: UIViewController {
         userLabel.text = tweet?.name
         userNameLabel.text = (tweet?.username)!
         profileView.setImageWithURL(tweet!.profileURL)
-        tweetLabel.text = tweet?.text
+
+        specialTextField.text = tweet?.text
+        specialTextField.sizeThatFits(CGSize(width: specialTextField.frame.width, height: CGFloat.max))
+        specialTextField.scrollEnabled = false;
         dateLabel.text = tweet?.createdAtString
         favoriteLabel.text = "\(tweet!.favoriteCount)"
         retweetLabel.text = "\(tweet!.retweetCount)"
@@ -83,6 +88,11 @@ class DetailsViewController: UIViewController {
             print("replying")
             print(error)
         })
+        let alert = UIAlertController(title: "Tweet", message: "Replied!", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: {action in
+            self.dismissViewControllerAnimated(false, completion: nil) }
+            ))
+        self.presentViewController(alert, animated: true, completion: nil)
 
     }
     
