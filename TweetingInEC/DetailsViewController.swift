@@ -9,8 +9,9 @@
 import UIKit
 
 class DetailsViewController: UIViewController {
-    
+    var tweetMessage: String = ""
     var tweet: Tweet?
+    
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var profileView: UIImageView!
@@ -22,6 +23,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var retweetLabel: UILabel!
     @IBOutlet weak var tweetImageView: UIImageView!
     @IBOutlet weak var sv: UIScrollView!
+    @IBOutlet weak var tweetField: UITextView!
     
     
     override func viewDidLoad() {
@@ -60,12 +62,21 @@ class DetailsViewController: UIViewController {
         if tweet!.mediaURL != nil {
             tweetImageView.setImageWithURL(tweet!.mediaURL!)
             tweetImageView.sizeToFit()
+            print("Image loaded")
             tweetImageView.layer.cornerRadius = 4
             tweetImageView.clipsToBounds = true
         }
         
         sv.contentSize = CGSize(width: self.sv.frame.size.width, height: self.sv.frame.origin.y + self.tweetImageView.frame.size.height)
         
+    }
+
+    @IBAction func onTweet(sender: AnyObject) {
+        tweetMessage = tweetField.text
+        let escapedTweetMessage = tweetMessage.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        TwitterClient.sharedInstance.tweeting(escapedTweetMessage!, params: nil , completion: { (error) -> () in
+            print("tweeting")
+        })
     }
     
     @IBAction func onDismiss(sender: AnyObject) {
