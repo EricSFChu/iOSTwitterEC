@@ -24,6 +24,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var tweetImageView: UIImageView!
     @IBOutlet weak var sv: UIScrollView!
     @IBOutlet weak var tweetField: UITextView!
+    @IBOutlet weak var helperView: UIView!
     
     
     override func viewDidLoad() {
@@ -66,17 +67,23 @@ class DetailsViewController: UIViewController {
             tweetImageView.layer.cornerRadius = 4
             tweetImageView.clipsToBounds = true
         }
+        tweetField.text = "\(tweet!.username!) "
         
-        sv.contentSize = CGSize(width: self.sv.frame.size.width, height: self.sv.frame.origin.y + self.tweetImageView.frame.size.height)
+        helperView.sizeToFit()
+        sv.contentSize = CGSize(width: self.sv.frame.size.width, height: 2*(helperView.frame.size.height))
+        //self.sv.frame.origin.y + self.tweetImageView.frame.size.height)
+        
         
     }
 
     @IBAction func onTweet(sender: AnyObject) {
         tweetMessage = tweetField.text
         let escapedTweetMessage = tweetMessage.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
-        TwitterClient.sharedInstance.tweeting(escapedTweetMessage!, params: nil , completion: { (error) -> () in
-            print("tweeting")
+        TwitterClient.sharedInstance.reply(escapedTweetMessage!, statusID: tweet!.id, params: nil , completion: { (error) -> () in
+            print("replying")
+            print(error)
         })
+
     }
     
     @IBAction func onDismiss(sender: AnyObject) {
