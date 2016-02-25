@@ -112,6 +112,12 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
     }
     
+    func imageTapped(gesture: UIGestureRecognizer) {
+        // if the tapped view is a UIImageView then set it to imageview
+       // if let profileImage = gesture.view as? UIImageView {
+         //performSegueWithIdentifier("toProfileView", sender: nil)
+      //  }
+    }
 
     
     override func viewDidAppear(animated: Bool) {
@@ -149,6 +155,14 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let unlikableImage = UIImage(named: "unlikable") as UIImage?
         cell.profileImage.layer.cornerRadius = 4
         cell.profileImage.clipsToBounds = true
+        
+        //Tap gesture recognition on profile picture
+        let tapGesture = UITapGestureRecognizer(target: self, action: "imageTapped:")
+        // add it to the image view;
+        cell.profileImage.addGestureRecognizer(tapGesture)
+        // make sure imageView can be interacted with by user
+        cell.profileImage.userInteractionEnabled = true
+
         
         if tweet.favorited == 0 {
             cell.favoriteButton.setImage(favoritableImage, forState: .Normal)
@@ -189,12 +203,13 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.setNeedsLayout()
         }
             //cell.photoView.setImageWithURL(tweet.mediaURL!)
-        
-        
+    
         
         return cell
         
     }
+    
+
     
     func refreshControlAction(refreshControl: UIRefreshControl) {
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
