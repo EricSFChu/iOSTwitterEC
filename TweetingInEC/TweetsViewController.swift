@@ -9,7 +9,7 @@
 import UIKit
 
 
-class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TweetsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     var refreshControl: UIRefreshControl!
     var tweets: [Tweet]?
@@ -29,11 +29,11 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView.rowHeight = UITableViewAutomaticDimension
 
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
+
     }
     
-
-
+    
     @IBAction func onFavorite(sender: AnyObject) {
         
         let button = sender as! UIButton
@@ -111,19 +111,19 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         }
         self.tableView.reloadData()
     }
-    
+   /*
     func imageTapped(gesture: UIGestureRecognizer) {
         // if the tapped view is a UIImageView then set it to imageview
-       // if let profileImage = gesture.view as? UIImageView {
-         //performSegueWithIdentifier("toProfileView", sender: nil)
-      //  }
+       
+                performSegueWithIdentifier("To Profile Other", sender: nil)
     }
-
+*/
     
     override func viewDidAppear(animated: Bool) {
-        self.tableView.reloadData()
-        self.tableView.estimatedRowHeight = 120
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
     }
     internal func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -138,7 +138,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         let tweet = tweets![indexPath.row]
         cell.userName.text = tweet.name
-        cell.screenNameLabel.text = tweet.username
+        cell.screenNameLabel.text = "@" + tweet.username!
         //print("Tweet user name", tweet.username)
         cell.messageSpecial.text = tweet.text
         cell.messageSpecial.sizeThatFits(CGSize(width: cell.messageSpecial.frame.width, height: CGFloat.max))
@@ -190,8 +190,10 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
                         UIView.animateWithDuration(0.3, animations: { () -> Void in
                             cell.photoView.alpha = 1.0
                         })
+                        cell.photoView.sizeToFit()
                     } else {
                         cell.photoView.image = image
+                        cell.photoView.sizeToFit()
                     }
                 },
                 failure: { (imageRequest, imageResponse, error) -> Void in
@@ -203,13 +205,15 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.setNeedsLayout()
         }
             //cell.photoView.setImageWithURL(tweet.mediaURL!)
-    
         
+        cell.layoutIfNeeded()
         return cell
         
     }
     
-
+    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        tableView.reloadData()
+    }
     
     func refreshControlAction(refreshControl: UIRefreshControl) {
         TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
@@ -228,6 +232,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         User.currentUser?.logout()
     }
     
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "To Details Page" {
             print("Details Segue called")
@@ -237,6 +242,20 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             
             let detailViewController = segue.destinationViewController as! DetailsViewController
             detailViewController.tweet = tweet
+        }
+        if segue.identifier == "To Profile Other" {
+            print("Profile Other Segue Called")
+            let button = sender as! UIButton
+            let view = button.superview!
+            let cell = view.superview as! TweetCell
+            let indexPath = tableView.indexPathForCell(cell)
+            let tweet = tweets![indexPath!.row]
+            
+            let profileViewController = segue.destinationViewController as! ProfileViewController
+            profileViewController.tweet = tweet
+        }
+        if segue.identifier == "To Profile" {
+            print("Profile Segue Called By ME")
         }
     }
 }

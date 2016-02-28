@@ -24,9 +24,14 @@ class Tweet: NSObject {
     var retweeted: Int
     var favorited: Int
     var entities: NSDictionary?
+    var otherInfo: NSDictionary?
     var media: [NSDictionary]?
     var mediaURLString: String
     var mediaURL: NSURL?
+    var followersCount: Int
+    var following: Int
+    var statusesCount: Int
+    var profileBackgroundURL: String
     
     init(dictionary: NSDictionary) {
         user = User(dictionary: (dictionary["user"] as? NSDictionary)!)
@@ -34,7 +39,6 @@ class Tweet: NSObject {
         createdAtString = dictionary["created_at"] as! String
         insideUser = dictionary["user"] as? NSDictionary
         username = insideUser!["screen_name"] as? String
-        username = "@" + username!
         name = insideUser!["name"] as? String
         profileURLString = insideUser!["profile_image_url"] as? String
         profileURL = NSURL(string: profileURLString!)!
@@ -43,7 +47,15 @@ class Tweet: NSObject {
         retweetCount = dictionary["retweet_count"] as! Int
         retweeted = dictionary["retweeted"] as! Int
         favorited = dictionary["favorited"] as! Int
+
         mediaURLString = ""
+        
+        otherInfo = dictionary["user"] as! NSDictionary?
+        followersCount = otherInfo!["followers_count"] as! Int
+        following = otherInfo!["friends_count"] as! Int
+        statusesCount = otherInfo!["statuses_count"] as! Int
+
+        profileBackgroundURL = (otherInfo!["profile_banner_url"] as? String)!
         var key: NSDictionary?
         //extract media info
         entities = dictionary["entities"] as? NSDictionary
@@ -59,7 +71,7 @@ class Tweet: NSObject {
         }
         
         
-        //print(dictionary)
+        //print(following)
         //print(entities)
         //print(media)
         //print("URL GOT IT: ", mediaURL)
