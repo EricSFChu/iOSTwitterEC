@@ -29,7 +29,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         tableView.delegate = self
         tableView.dataSource = self
+        if tweet?.profileBackgroundURL != "" {
         headerImage.setImageWithURL(NSURL(string: (tweet?.profileBackgroundURL)!)!)
+        }
         headerImage.sizeToFit()
         profileImage.setImageWithURL((tweet?.profileURL)!)
         tweetCount.text = "\(tweet!.statusesCount)"
