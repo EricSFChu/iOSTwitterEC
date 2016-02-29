@@ -125,7 +125,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView.reloadData()
         }
     }
-    internal func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if let tweets = tweets {
             return tweets.count
@@ -134,7 +134,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
     }
-    internal func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetCell", forIndexPath: indexPath) as! TweetCell
         let tweet = tweets![indexPath.row]
         cell.userName.text = tweet.name
@@ -176,6 +176,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.retweet.setImage(unlikableImage, forState: .Normal)
         }
         
+        
         if tweet.mediaURL != nil {
             let imageRequest = NSURLRequest(URL: tweet.mediaURL!)
             cell.photoView.setImageWithURLRequest(
@@ -187,21 +188,24 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
                     if imageResponse != nil {
                         cell.photoView.alpha = 0.0
                         cell.photoView.image = image
+                        cell.photoView.sizeToFit()
+                        cell.photoView.layer.cornerRadius = 4
+                        cell.photoView.clipsToBounds = true
                         UIView.animateWithDuration(0.3, animations: { () -> Void in
                             cell.photoView.alpha = 1.0
                         })
-                        cell.photoView.sizeToFit()
+                        
                     } else {
                         cell.photoView.image = image
                         cell.photoView.sizeToFit()
+                        cell.photoView.layer.cornerRadius = 4
+                        cell.photoView.clipsToBounds = true
                     }
                 },
                 failure: { (imageRequest, imageResponse, error) -> Void in
                     // do something for the failure condition
             })
-            cell.photoView.sizeToFit()
-            cell.photoView.layer.cornerRadius = 4
-            cell.photoView.clipsToBounds = true
+
             cell.setNeedsLayout()
         }
             //cell.photoView.setImageWithURL(tweet.mediaURL!)

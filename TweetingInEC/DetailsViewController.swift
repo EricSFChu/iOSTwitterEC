@@ -66,11 +66,37 @@ class DetailsViewController: UIViewController {
         }
         
         if tweet!.mediaURL != nil {
-            tweetImageView.setImageWithURL(tweet!.mediaURL!)
-            tweetImageView.sizeToFit()
+            
+            let imageRequest = NSURLRequest(URL: tweet!.mediaURL!)
+            
+            tweetImageView.setImageWithURLRequest(
+                imageRequest,
+                placeholderImage: nil,
+                success: { (imageRequest, imageResponse, image) -> Void in
+                    
+                    // imageResponse will be nil if the image is cached
+                    if imageResponse != nil {
+                        print("Image was NOT cached, fade in image")
+                        self.tweetImageView.alpha = 0.0
+                        self.tweetImageView.image = image
+                        self.tweetImageView.sizeToFit()
+                        self.tweetImageView.layer.cornerRadius = 4
+                        self.tweetImageView.clipsToBounds = true
+                        UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            self.tweetImageView.alpha = 1.0
+                        })
+                    } else {
+                        print("Image was cached so just update the image")
+                        self.tweetImageView.image = image
+                        self.tweetImageView.sizeToFit()
+                        self.tweetImageView.layer.cornerRadius = 4
+                        self.tweetImageView.clipsToBounds = true
+                    }
+                },
+                failure: { (imageRequest, imageResponse, error) -> Void in
+                    // do something for the failure condition
+            })
             print("Image loaded")
-            tweetImageView.layer.cornerRadius = 4
-            tweetImageView.clipsToBounds = true
         }
         tweetField.text = "@\(tweet!.username!) "
         
