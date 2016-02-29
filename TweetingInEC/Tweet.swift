@@ -31,7 +31,7 @@ class Tweet: NSObject {
     var followersCount: Int
     var following: Int
     var statusesCount: Int
-    var profileBackgroundURL: String
+    var profileBackgroundURL: String?
     
     init(dictionary: NSDictionary) {
         user = User(dictionary: (dictionary["user"] as? NSDictionary)!)
@@ -54,8 +54,11 @@ class Tweet: NSObject {
         followersCount = otherInfo!["followers_count"] as! Int
         following = otherInfo!["friends_count"] as! Int
         statusesCount = otherInfo!["statuses_count"] as! Int
-
-        profileBackgroundURL = (otherInfo!["profile_banner_url"] as? String)!
+        profileBackgroundURL = ""
+        
+        if let val = otherInfo!["profile_banner_url"]{
+        profileBackgroundURL = (self.otherInfo!["profile_banner_url"] as? String)!
+        }
         var key: NSDictionary?
         //extract media info
         entities = dictionary["entities"] as? NSDictionary
