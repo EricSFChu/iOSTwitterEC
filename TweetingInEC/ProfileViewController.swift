@@ -16,6 +16,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var FollowingCount: UILabel!
     @IBOutlet weak var FollowersCount: UILabel!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var segmentedTweetsMentions: UISegmentedControl!
     
     var tweet: Tweet?
     var tweets: [Tweet]?
@@ -83,4 +84,34 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
 
+    @IBAction func onSegmentChange(sender: AnyObject) {
+        switch(segmentedTweetsMentions.selectedSegmentIndex){
+        case 0:
+            print("Tweets Selected")
+            TwitterClient.sharedInstance.getUserTweets(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+                self.tweets = tweets
+                self.tableView.reloadData()
+                self.tableView.estimatedRowHeight = 120
+                self.tableView.rowHeight = UITableViewAutomaticDimension
+            })
+            self.tableView.reloadData()
+            
+            break
+            
+        case 1:
+            print("Likes Selected")
+            TwitterClient.sharedInstance.getUserLikes(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+                self.tweets = tweets
+                self.tableView.reloadData()
+                self.tableView.estimatedRowHeight = 120
+                self.tableView.rowHeight = UITableViewAutomaticDimension
+            })
+            self.tableView.reloadData()
+            
+            break
+        default:
+            break
+        }
+    }
+    
 }

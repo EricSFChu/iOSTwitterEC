@@ -32,6 +32,7 @@ The following **additional** features are implemented:
 - [x] Hyperlinks within tweets are clickable
 - [x] Images are loaded on tweets if available
 - [x] Added endpoint to pull user tweets on profile page
+- [x] Added a segmented controller to invoke the like and user tweet endpoints to display those endpoints on the profile view
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
@@ -45,6 +46,7 @@ Here's a walkthrough of implemented user stories:
 <img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 ![WalkThrough](TweetingECWT3.gif)
+![Walkthrough Extended](TweetingECWT4.gif)
 
 ## Notes
 
