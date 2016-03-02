@@ -118,7 +118,7 @@
                                                                 <constraint firstAttribute="height" constant="50" id="fiA-rX-Pq1"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" scrollEnabled="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QO0-eN-vUF">
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" scrollEnabled="NO" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QO0-eN-vUF">
                                                             <rect key="frame" x="78" y="11" width="218" height="93"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
@@ -172,11 +172,37 @@
                                     <constraint firstItem="aW9-mj-JJG" firstAttribute="leading" secondItem="mr8-vs-Bvs" secondAttribute="trailing" constant="49" id="yDl-zX-p7q"/>
                                 </constraints>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdi-ia-Gad">
+                                <rect key="frame" x="0.0" y="504" width="320" height="64"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="oSV-bH-LWg">
+                                        <rect key="frame" x="55" y="18" width="211" height="29"/>
+                                        <segments>
+                                            <segment title="Tweets"/>
+                                            <segment title="Likes"/>
+                                        </segments>
+                                        <connections>
+                                            <action selector="onSegmentChange:" destination="jq6-hL-tO4" eventType="valueChanged" id="3Kx-uL-J8V"/>
+                                        </connections>
+                                    </segmentedControl>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="oSV-bH-LWg" firstAttribute="top" secondItem="gdi-ia-Gad" secondAttribute="top" constant="18" id="2Ks-e2-h6c"/>
+                                    <constraint firstAttribute="trailing" secondItem="oSV-bH-LWg" secondAttribute="trailing" constant="54" id="XTZ-mZ-GlB"/>
+                                    <constraint firstAttribute="bottom" secondItem="oSV-bH-LWg" secondAttribute="bottom" constant="18" id="nlL-r3-CFg"/>
+                                    <constraint firstItem="oSV-bH-LWg" firstAttribute="leading" secondItem="gdi-ia-Gad" secondAttribute="leading" constant="55" id="yo1-ZF-pBl"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="qMg-5m-FqR" firstAttribute="top" secondItem="MZX-Uc-fF3" secondAttribute="bottom" constant="64" id="9yb-q3-bH1"/>
+                            <constraint firstAttribute="trailing" secondItem="gdi-ia-Gad" secondAttribute="trailing" id="GBJ-2b-ydg"/>
                             <constraint firstItem="MZX-Uc-fF3" firstAttribute="leading" secondItem="gNH-Vw-MyN" secondAttribute="leading" id="Jjk-hD-foS"/>
+                            <constraint firstItem="gdi-ia-Gad" firstAttribute="leading" secondItem="gNH-Vw-MyN" secondAttribute="leading" id="KUG-3Z-cD0"/>
+                            <constraint firstItem="gdi-ia-Gad" firstAttribute="top" secondItem="MZX-Uc-fF3" secondAttribute="bottom" id="NT0-4R-trh"/>
+                            <constraint firstItem="qMg-5m-FqR" firstAttribute="top" secondItem="gdi-ia-Gad" secondAttribute="bottom" id="j2F-s5-ko2"/>
                             <constraint firstItem="MZX-Uc-fF3" firstAttribute="top" secondItem="2RZ-W3-nCB" secondAttribute="bottom" constant="-64" id="n9H-sc-ibO"/>
                             <constraint firstAttribute="trailing" secondItem="MZX-Uc-fF3" secondAttribute="trailing" id="zPX-Gy-DhB"/>
                         </constraints>
@@ -189,6 +215,7 @@
                         <outlet property="FollowingCount" destination="mr8-vs-Bvs" id="4eh-rz-Uah"/>
                         <outlet property="headerImage" destination="xLZ-Fg-JpZ" id="nNA-Ce-EiM"/>
                         <outlet property="profileImage" destination="mmN-xE-E6J" id="zfX-5q-leC"/>
+                        <outlet property="segmentedTweetsMentions" destination="oSV-bH-LWg" id="M0U-Ch-8H9"/>
                         <outlet property="tableView" destination="d6Y-Vn-ndN" id="BBx-ia-gX8"/>
                         <outlet property="tweetCount" destination="eer-oj-Vjh" id="N6K-TQ-BV8"/>
                     </connections>
@@ -473,7 +500,7 @@
                                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJG-XC-AH6">
+                                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oJG-XC-AH6">
                                                 <rect key="frame" x="184" y="87" width="66" height="22"/>
                                                 <state key="normal" title="Button" image="favoritable"/>
                                             </button>

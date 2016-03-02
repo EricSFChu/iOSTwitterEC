@@ -165,5 +165,24 @@ class TwitterClient: BDBOAuth1SessionManager {
         })
         
     }
+    
+    func getUserLikes(name: String, params: NSDictionary?, completion: (tweets: [Tweet]?, error: NSError?)  -> ()) {
+        
+        GET("/1.1/favorites/list.json?screen_name=\(name)&count=25", parameters: params, success: { (operation: NSURLSessionDataTask, response: AnyObject?) -> Void in
+            //print("user's tweets: \(response)")
+            let tweets = Tweet.tweetsWithArray((response as? [NSDictionary])!)
+            completion(tweets: tweets, error: nil)
+            
+            for tweet in tweets {
+                //print("text: \(tweet.text), created: \(tweet.createdAt), profileImageURL: \(tweet.profileURL)")
+            }
+            }, failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
+                print("error getting user's likes", error)
+                completion(tweets: nil, error: error)
+        })
+        
+    }
+    
+    //"1.1/favorites/list.json?\(name)"
 
 }
