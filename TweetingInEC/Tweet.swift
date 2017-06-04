@@ -7,27 +7,51 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
 
 class Tweet: NSObject {
     var user: User?
     var text: String?
     var createdAtString: String!
-    var createdAt: NSDate?
+    var createdAt: Date?
     var username: String?
     var insideUser: NSDictionary?
     var name: String?
     var profileURLString: String?
-    var profileURL: NSURL
+    var profileURL: URL
     var favoriteCount: IntegerLiteralType
     var retweetCount: Int
     var id: Int
-    var retweeted: Int
+    var retweeted: IntegerLiteralType
     var favorited: Int
     var entities: NSDictionary?
     var otherInfo: NSDictionary?
     var media: [NSDictionary]?
     var mediaURLString: String
-    var mediaURL: NSURL?
+    var mediaURL: URL?
     var followersCount: Int
     var following: Int
     var statusesCount: Int
@@ -41,12 +65,19 @@ class Tweet: NSObject {
         username = insideUser!["screen_name"] as? String
         name = insideUser!["name"] as? String
         profileURLString = insideUser!["profile_image_url"] as? String
-        profileURL = NSURL(string: profileURLString!)!
+        profileURL = URL(string: profileURLString!)!
         favoriteCount = dictionary["favorite_count"] as! IntegerLiteralType
         id = dictionary["id"] as! Int
         retweetCount = dictionary["retweet_count"] as! Int
-        retweeted = dictionary["retweeted"] as! Int
-        favorited = dictionary["favorited"] as! Int
+        if dictionary["retweeted"] != nil && dictionary["retweeted"] as? NSNull == nil {
+               // retweeted = dictionary["retweeted"] as! IntegerLiteralType
+            retweeted = 0
+        } else {
+            
+            retweeted = 0
+            
+        }
+        favorited = 0
 
         mediaURLString = ""
         
@@ -66,7 +97,7 @@ class Tweet: NSObject {
         if media?.count > 0 {
             for key in media! {
             mediaURLString = (key["media_url"] as? String)!
-            mediaURL = NSURL(string: mediaURLString)
+            mediaURL = URL(string: mediaURLString)
             }
         } else {
             mediaURLString = ""
@@ -79,18 +110,18 @@ class Tweet: NSObject {
         //print(media)
         //print("URL GOT IT: ", mediaURL)
         
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "EEE MMM d HH:mm:ss Z y"
         
         //we can get a date from a string or a string from a date
-        createdAt = formatter.dateFromString(createdAtString!)
+        createdAt = formatter.date(from: createdAtString!)
         
         //we can take elements from the dictionaries and place it in the tweet object which then 
         //can be used in the tweet view controller.
         
     }
     
-    class func tweetsWithArray(array: [NSDictionary]) -> [Tweet] {
+    class func tweetsWithArray(_ array: [NSDictionary]) -> [Tweet] {
         var tweets = [Tweet]()
         
         for dictionary in array {

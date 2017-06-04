@@ -26,31 +26,30 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         tableView.delegate = self
         tableView.dataSource = self
+
         if tweet?.profileBackgroundURL != "" {
-        headerImage.setImageWithURL(NSURL(string: (tweet?.profileBackgroundURL)!)!)
+            headerImage.setImageWith(URL(string: (tweet?.profileBackgroundURL!)!)!)
         }
         headerImage.sizeToFit()
-        profileImage.setImageWithURL((tweet?.profileURL)!)
+        profileImage.setImageWith((tweet?.profileURL)! as URL)
         tweetCount.text = "\(tweet!.statusesCount)"
         FollowersCount.text = "\(tweet!.followersCount)"
         FollowingCount.text = "\(tweet!.following)"
         
-        titleView = UIScrollView(frame: CGRectMake(0.0, 0.0, 150.0, 44.0))
-        titleView.contentSize = CGSizeMake(0.0, 88.0)
+        titleView = UIScrollView(frame: CGRect(x: 0.0, y: 0.0, width: 150.0, height: 44.0))
+        titleView.contentSize = CGSize(width: 0.0, height: 88.0)
         self.view.addSubview(titleView)
         
-        titleLabel = UILabel(frame: CGRectMake(0.0, 44.0, CGRectGetWidth(titleView.frame), 44.0))
-        titleLabel.textAlignment = NSTextAlignment.Center
+        titleLabel = UILabel(frame: CGRect(x: 0.0, y: 44.0, width: titleView.frame.width, height: 44.0))
+        titleLabel.textAlignment = NSTextAlignment.center
         titleLabel.font = UIFont(name: "Helvetica", size: 20)
         titleLabel.text = self.title
-        titleLabel.textColor = UIColor.whiteColor()
+        titleLabel.textColor = UIColor.white
         titleView.addSubview(titleLabel)
         self.navigationItem.titleView = titleView
-        TwitterClient.sharedInstance.getUserTweets(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+        TwitterClient.sharedInstance.getUserTweets(name: tweet!.username!, params: nil, completion: { (tweets, error) -> () in
             self.tweets = tweets
             self.tableView.reloadData()
             self.tableView.estimatedRowHeight = 120
@@ -60,12 +59,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView){
-       contentOffset = CGPointMake(0.0, min(scrollView.contentOffset.y + 64.0, 44.0))
+    func scrollViewDidScroll(_ scrollView: UIScrollView){
+       contentOffset = CGPoint(x: 0.0, y: min(scrollView.contentOffset.y + 64.0, 44.0))
         self.titleView.contentOffset.y = scrollView.contentOffset.y + 64.0
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let tweets = tweets {
             return tweets.count
         } else {
@@ -73,10 +72,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("UserTweetCell", forIndexPath: indexPath) as! UserTweetCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UserTweetCell", for: indexPath) as! UserTweetCell
         let tweet = tweets![indexPath.row]
-        cell.profileImage.setImageWithURL(tweet.profileURL)
+        cell.profileImage.setImageWith(tweet.profileURL as URL)
         cell.messageSpecial.text = tweet.text
         cell.messageSpecial.sizeToFit()
         cell.layoutIfNeeded()
@@ -84,11 +83,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
 
-    @IBAction func onSegmentChange(sender: AnyObject) {
+    @IBAction func onSegmentChange(_ sender: AnyObject) {
         switch(segmentedTweetsMentions.selectedSegmentIndex){
         case 0:
             print("Tweets Selected")
-            TwitterClient.sharedInstance.getUserTweets(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+            TwitterClient.sharedInstance.getUserTweets(name: tweet!.username!, params: nil, completion: { (tweets, error) -> () in
                 self.tweets = tweets
                 self.tableView.reloadData()
                 self.tableView.estimatedRowHeight = 120
@@ -100,7 +99,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         case 1:
             print("Likes Selected")
-            TwitterClient.sharedInstance.getUserLikes(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+            TwitterClient.sharedInstance.getUserLikes(name: tweet!.username!, params: nil, completion: { (tweets, error) -> () in
                 self.tweets = tweets
                 self.tableView.reloadData()
                 self.tableView.estimatedRowHeight = 120
