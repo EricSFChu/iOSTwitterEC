@@ -110,7 +110,7 @@ class DetailsViewController: UIViewController {
     @IBAction func onTweet(_ sender: AnyObject) {
         tweetMessage = tweetField.text
         let escapedTweetMessage = tweetMessage.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-        TwitterClient.sharedInstance.reply(escapedTweetMessage!, statusID: tweet!.id, params: nil , completion: { (error) -> () in
+        TwitterClient.sharedInstance.reply(escapedTweet: escapedTweetMessage!, statusID: tweet!.id, params: nil , completion: { (error) -> () in
             print("replying")
             print(error)
         })
@@ -138,14 +138,14 @@ class DetailsViewController: UIViewController {
         let path = tweet!.id
         let toTweetOrNotToTweet = tweet!.retweeted
         if toTweetOrNotToTweet == 0 {
-            TwitterClient.sharedInstance.retweet(path, params: nil) { (error) -> () in
+            TwitterClient.sharedInstance.retweet(id: path, params: nil) { (error) -> () in
                 print("Retweeting")
                 self.tweet?.retweetCount+=1
                 self.retweetLabel.text = "\(self.tweet!.retweetCount)"
                 self.tweet!.retweeted = 1
             }
         } else if toTweetOrNotToTweet == 1 {
-            TwitterClient.sharedInstance.unretweet(path, params: nil , completion: { (error) -> () in
+            TwitterClient.sharedInstance.unretweet(id: path, params: nil , completion: { (error) -> () in
                 print("Unretweeting")
                 self.tweet?.retweetCount-=1
                 self.retweetLabel.text = "\(self.tweet!.retweetCount)"
@@ -159,14 +159,14 @@ class DetailsViewController: UIViewController {
         let path = tweet!.id
         let toFavoriteOrNotToFavorite = tweet!.favorited
         if toFavoriteOrNotToFavorite == 0 {
-            TwitterClient.sharedInstance.likeTweet(path, params: nil) { (error) -> () in
+            TwitterClient.sharedInstance.likeTweet(id: path, params: nil) { (error) -> () in
                 print("Liking")
                 self.tweet?.favoriteCount += 1
                 self.favoriteLabel.text = "\(self.tweet!.favoriteCount)"
                 self.tweet!.favorited = 1
             }
         } else if toFavoriteOrNotToFavorite == 1 {
-            TwitterClient.sharedInstance.unlikeTweet(path, params: nil , completion: { (error) -> () in
+            TwitterClient.sharedInstance.unlikeTweet(id: path, params: nil , completion: { (error) -> () in
                 print("unliking")
                 self.tweet?.favoriteCount -= 1
                 self.favoriteLabel.text = "\(self.tweet!.favoriteCount)"

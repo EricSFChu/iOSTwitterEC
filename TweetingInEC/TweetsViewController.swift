@@ -22,11 +22,12 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl.addTarget(self, action: #selector(TweetsViewController.refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         tableView.addSubview(refreshControl)
         
-        TwitterClient.sharedInstance.homeTimelineWithParams(nil) { (tweets, error) -> () in
+        TwitterClient.sharedInstance.homeTimelineWithParams(params: nil) { (tweets, error) -> () in
             self.tweets = tweets
             self.tableView.reloadData()
             self.tableView.estimatedRowHeight = 120
             self.tableView.rowHeight = UITableViewAutomaticDimension
+            print(tweets)
 
         }
         tableView.reloadData()
@@ -45,14 +46,14 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let path = tweet.id
         let toFavoriteOrNotToFavorite = tweet.favorited
         if toFavoriteOrNotToFavorite == 0 {
-            TwitterClient.sharedInstance.likeTweet(path, params: nil) { (error) -> () in
+            TwitterClient.sharedInstance.likeTweet(id: path, params: nil) { (error) -> () in
                 print("Liking")
                 self.tweets![indexPath!.row].favoriteCount += 1
                 tweet.favorited = 1
                 self.tableView.reloadData()
             }
         } else if toFavoriteOrNotToFavorite == 1 {
-            TwitterClient.sharedInstance.unlikeTweet(path, params: nil , completion: { (error) -> () in
+            TwitterClient.sharedInstance.unlikeTweet(id: path, params: nil , completion: { (error) -> () in
                 print("unliking")
                 self.tweets![indexPath!.row].favoriteCount -= 1
                 tweet.favorited = 0
@@ -82,14 +83,14 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
         let path = tweet.id
         let toTweetOrNotToTweet = tweet.retweeted
         if toTweetOrNotToTweet == 0 {
-            TwitterClient.sharedInstance.retweet(path, params: nil) { (error) -> () in
+            TwitterClient.sharedInstance.retweet(id: path, params: nil) { (error) -> () in
                 print("Retweeting")
                 self.tweets![indexPath!.row].retweetCount += 1
                 tweet.retweeted = 1
                 self.tableView.reloadData()
             }
         } else if toTweetOrNotToTweet == 1 {
-            TwitterClient.sharedInstance.unretweet(path, params: nil , completion: { (error) -> () in
+            TwitterClient.sharedInstance.unretweet(id: path, params: nil , completion: { (error) -> () in
                 print("Unretweeting")
                 self.tweets![indexPath!.row].retweetCount -= 1
                 tweet.retweeted = 0
@@ -220,7 +221,7 @@ class TweetsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func refreshControlAction(_ refreshControl: UIRefreshControl) {
-        TwitterClient.sharedInstance.homeTimelineWithParams(nil, completion:  { (tweets, error) -> () in
+        TwitterClient.sharedInstance.homeTimelineWithParams(params: nil, completion:  { (tweets, error) -> () in
             self.tweets = tweets
             self.tableView.reloadData()
         })

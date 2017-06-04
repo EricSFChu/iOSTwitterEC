@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.userDidLogout), name: NSNotification.Name(rawValue: userDidLogoutNotification), object: nil)
         if User.currentUser != nil {
             // go to the logged in screen
-            print("Current user detected", User.currentUser?.name)
+            print("Current user detected", User.currentUser?.name! as Any)
             let vc = storyboard.instantiateViewController(withIdentifier: "TweetsView") as!
                 UINavigationController
             //let vc2 = vc.topViewController as! TweetsViewController
@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
-        TwitterClient.sharedInstance.openURL(url)
+        TwitterClient.sharedInstance.openURL(url: url as NSURL)
         
         return true
     }

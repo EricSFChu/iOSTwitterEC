@@ -26,12 +26,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         tableView.delegate = self
         tableView.dataSource = self
+
         if tweet?.profileBackgroundURL != "" {
-        headerImage.setImageWith(URL(string: (tweet?.profileBackgroundURL)!)!)
+            headerImage.setImageWith(URL(string: (tweet?.profileBackgroundURL!)!)!)
         }
         headerImage.sizeToFit()
         profileImage.setImageWith((tweet?.profileURL)! as URL)
@@ -50,7 +49,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         titleLabel.textColor = UIColor.white
         titleView.addSubview(titleLabel)
         self.navigationItem.titleView = titleView
-        TwitterClient.sharedInstance.getUserTweets(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+        TwitterClient.sharedInstance.getUserTweets(name: tweet!.username!, params: nil, completion: { (tweets, error) -> () in
             self.tweets = tweets
             self.tableView.reloadData()
             self.tableView.estimatedRowHeight = 120
@@ -88,7 +87,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         switch(segmentedTweetsMentions.selectedSegmentIndex){
         case 0:
             print("Tweets Selected")
-            TwitterClient.sharedInstance.getUserTweets(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+            TwitterClient.sharedInstance.getUserTweets(name: tweet!.username!, params: nil, completion: { (tweets, error) -> () in
                 self.tweets = tweets
                 self.tableView.reloadData()
                 self.tableView.estimatedRowHeight = 120
@@ -100,7 +99,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         case 1:
             print("Likes Selected")
-            TwitterClient.sharedInstance.getUserLikes(tweet!.username!, params: nil, completion: { (tweets, error) -> () in
+            TwitterClient.sharedInstance.getUserLikes(name: tweet!.username!, params: nil, completion: { (tweets, error) -> () in
                 self.tweets = tweets
                 self.tableView.reloadData()
                 self.tableView.estimatedRowHeight = 120

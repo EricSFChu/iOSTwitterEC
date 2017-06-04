@@ -27,9 +27,9 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
     @IBAction func onTweet(_ sender: AnyObject) {
         let tweetMessage = composeField.text
         let escapedTweetMessage = tweetMessage?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
-        TwitterClient.sharedInstance.tweeting(escapedTweetMessage!, params: nil , completion: { (error) -> () in
+        TwitterClient.sharedInstance.tweeting(escapedTweet: escapedTweetMessage!, params: nil , completion: { (error) -> () in
             print("chirping")
-            print(error)
+            print(error!)
         })
         let alert = UIAlertController(title: "Tweet", message: "Chirp Chirp!", preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: {action in

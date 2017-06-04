@@ -45,7 +45,7 @@ class Tweet: NSObject {
     var favoriteCount: IntegerLiteralType
     var retweetCount: Int
     var id: Int
-    var retweeted: Int
+    var retweeted: IntegerLiteralType
     var favorited: Int
     var entities: NSDictionary?
     var otherInfo: NSDictionary?
@@ -69,8 +69,15 @@ class Tweet: NSObject {
         favoriteCount = dictionary["favorite_count"] as! IntegerLiteralType
         id = dictionary["id"] as! Int
         retweetCount = dictionary["retweet_count"] as! Int
-        retweeted = dictionary["retweeted"] as! Int
-        favorited = dictionary["favorited"] as! Int
+        if dictionary["retweeted"] != nil && dictionary["retweeted"] as? NSNull == nil {
+               // retweeted = dictionary["retweeted"] as! IntegerLiteralType
+            retweeted = 0
+        } else {
+            
+            retweeted = 0
+            
+        }
+        favorited = 0
 
         mediaURLString = ""
         
