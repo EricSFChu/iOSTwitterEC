@@ -20,25 +20,25 @@ class ComposeViewController: UIViewController, UITextViewDelegate {
         self.composeField.delegate = self
         
     }
-    @IBAction func onDismiss(sender: AnyObject) {
-        self.dismissViewControllerAnimated(false, completion: nil)
+    @IBAction func onDismiss(_ sender: AnyObject) {
+        self.dismiss(animated: false, completion: nil)
     }
 
-    @IBAction func onTweet(sender: AnyObject) {
+    @IBAction func onTweet(_ sender: AnyObject) {
         let tweetMessage = composeField.text
-        let escapedTweetMessage = tweetMessage.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let escapedTweetMessage = tweetMessage?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
         TwitterClient.sharedInstance.tweeting(escapedTweetMessage!, params: nil , completion: { (error) -> () in
             print("chirping")
             print(error)
         })
-        let alert = UIAlertController(title: "Tweet", message: "Chirp Chirp!", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: {action in
-            self.dismissViewControllerAnimated(false, completion: nil) }
+        let alert = UIAlertController(title: "Tweet", message: "Chirp Chirp!", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: {action in
+            self.dismiss(animated: false, completion: nil) }
             ))
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         let newLength = 140 - composeField.text.characters.count
         print(newLength)
         //change the value of the label

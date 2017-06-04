@@ -19,7 +19,7 @@ class User: NSObject {
     var profileImageUrl: String?
     var tagline: String?
     var dictionary: NSDictionary
-    var profileURL: NSURL
+    var profileURL: URL
 
     
     init(dictionary: NSDictionary) {
@@ -29,7 +29,7 @@ class User: NSObject {
         screenname = dictionary["screen_name"] as? String
         profileImageUrl = dictionary["profile_image_url"] as? String
         tagline = dictionary["description"] as? String
-        profileURL = NSURL(string: profileImageUrl!)!
+        profileURL = URL(string: profileImageUrl!)!
         
         
     }
@@ -39,17 +39,17 @@ class User: NSObject {
         //remove all the permissions
         TwitterClient.sharedInstance.requestSerializer.removeAccessToken()
         
-        NSNotificationCenter.defaultCenter().postNotificationName(userDidLogoutNotification, object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: userDidLogoutNotification), object: nil)
     }
     
     class var currentUser: User? {
         get{
             if _currentUser == nil {
-                let data = NSUserDefaults.standardUserDefaults().objectForKey(currentUserKey) as! NSData?
+                let data = UserDefaults.standard.object(forKey: currentUserKey) as! Data?
                 if data != nil {
                     if data != nil {
                         do {
-                            let dictionary =  try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+                            let dictionary =  try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.allowFragments) as! NSDictionary
                             _currentUser = User(dictionary: dictionary)
                             } catch(let error) {
                                 print(error)
@@ -66,17 +66,17 @@ class User: NSObject {
         
             if _currentUser != nil {
                 do {
-                    let data = try NSJSONSerialization.dataWithJSONObject(user!.dictionary, options: NSJSONWritingOptions.PrettyPrinted)
-                    NSUserDefaults.standardUserDefaults().setObject(data, forKey: currentUserKey)
+                    let data = try JSONSerialization.data(withJSONObject: user!.dictionary, options: JSONSerialization.WritingOptions.prettyPrinted)
+                    UserDefaults.standard.set(data, forKey: currentUserKey)
                     } catch (let error) {
                     print(error)
                         assert(false)
                     }
             } else {
-                    NSUserDefaults.standardUserDefaults().setObject(nil, forKey: currentUserKey)
+                    UserDefaults.standard.set(nil, forKey: currentUserKey)
                     }
             
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.synchronize()
         }
         
     }
